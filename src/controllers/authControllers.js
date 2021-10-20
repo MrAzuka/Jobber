@@ -3,44 +3,49 @@ const User = require('../models/authUser')
 
 
 exports.userSignUp = async (req, res) => {
-    await User.findOne({email: req.body.email}, (err,existingUser) => {
-        if (err) {
-            res.status(500).json({err})
-        }
-        if(existingUser) {
-            res.status(400).json('A user already has that email')
-        }
-        // Create new user
-        User.create({
-            fullName: req.body.name,
-            email: req.body.email,
-            password: req.body.password
-        }, (err, newUser) => {  
-            if(err){
-             res.status(500).json({err})
-            }else{
-                res.status(200).json('User created Successfully')
-            }
-        }) 
-    })
+   const {username, email, password} = req.body
+
+   let user = await User.findOne({email})
+
+   if (user) {
+       res.status(400).json('User already exist')
+   }
+
+   user = new User({
+       username,
+       email,
+       password
+   })
+
+   await user.save()
+   res.status(200).json('User Creation Success')
 }
 
 exports.userLogin = async (req, res) => {
-    await User.findOne({email: req.body.email}, (err,existingUser) => {
-        if (err) {
-            res.status(500).json({err})
-        }
-        if(!existingUser) {
-            res.status(401).json({message: "Incorrect Username"})
-        }
-        // Compare passowrd with hashed password
-        let matchedPassword = bcrypt.compareSync(req.body.password, existingUser.password)
-        if(!matchedPassword){
-            res.status(401).json({message: "Incorrect password"})
-        }else{
-            res.status(200).json('Logged in successfully')
-        }
-     })
+    const {username, password} = req.body
+
+    let user = await User.findOne({username})
+ 
+    if (!user) {
+        res.status(200).json('User doesn\'t exist')
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password)
+
+    if(!isMatch) {
+        res.status(200).json('Go and login')   
+    }
+    req.session.isAuth = true
+    res.status(200).json('Login Success')
+}
+
+exports.userLogout = async (req, res) => {
+    try {
+        await req.session.destroy()
+        res.status(200).json('Logout Success')
+    } catch (error) {
+        res.status(500).json(error)
+    }
 }
 
 exports.getSignUpPage = async (req, res) => {
@@ -50,3 +55,8 @@ exports.getSignUpPage = async (req, res) => {
 exports.getLoginPage = async (req, res) => {
     res.status(200).json('Login Page')
 }
+
+exports.getHomePage = async (req, res) => {
+    res.status(200).json('Home Page')
+}
+
