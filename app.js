@@ -7,10 +7,13 @@ const authRoutes = require('./src/routes/authRoutes')
 
 const app = express()
 
+// Database Connection
 connectDB()
 
+// Middleware
 app.use(express.json())
 
+// Routes
 app.use(authRoutes)
 
 
