@@ -1,10 +1,12 @@
 require('dotenv').config()
 const express = require('express')
+const cors = require('cors')
 const session = require('express-session')
+const path = require('path')
 const {PORT, SESSION_SECRET_KEY } = process.env
-const {connectDB} = require('./src/DB/connectDB')
-const authRoutes = require('./src/routes/authRoutes')
-const {store} = require('./src/sessions/sessionsConfig')
+const {connectDB} = require('./DB/connectDB')
+const authRoutes = require('./routes/authRoutes')
+const {store} = require('./sessions/sessionsConfig')
 
 const app = express()
 
@@ -12,7 +14,8 @@ const app = express()
 connectDB()
 
 // View Engine
-app.set("view engine", "ejs")
+app.set('view engine', 'ejs')
+app.set('views',path.join(__dirname,'views'))
 
 // Middleware
 app.use(express.json())
@@ -23,6 +26,7 @@ app.use(session({
     saveUninitialized: false,
     store: store
 }))
+app.use(cors())
 
 // Routes
 app.use(authRoutes)
