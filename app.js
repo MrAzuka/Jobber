@@ -1,6 +1,5 @@
 require('dotenv').config()
 const express = require('express')
-const cors = require('cors')
 const session = require('express-session')
 const path = require('path')
 const {PORT, SESSION_SECRET_KEY } = process.env
@@ -19,18 +18,19 @@ app.set('views',path.join(__dirname,'views'))
 
 // Middleware
 app.use(express.json())
-app.use(express.urlencoded({extended: true}))
+app.use(express.urlencoded({ extended: true }))
 app.use(session({
     secret: SESSION_SECRET_KEY,
     resave: false,
     saveUninitialized: false,
     store: store
 }))
-app.use(cors())
+// app.use(cors())
+
+
 
 // Routes
 app.use(authRoutes)
-
 
 app.listen(PORT, ()=>{
     console.log('Server running on PORT 8000')
