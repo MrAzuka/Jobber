@@ -1,68 +1,54 @@
-const bcrypt = require('bcrypt')
 const User = require('../models/authUser')
+const bcrypt = require('bcrypt')
+const passport = require('passport')
+const initializePassport = require('../passport-config/passport-config')
 
+
+initializePassport(
+    passport, 
+    async (email) => {
+        const userFound = await User.findOne({email})
+        return userFound
+    },
+    async (id) => {
+        const userFound = await User.findOne({_id: id})
+        return userFound
+    }
+)
 
 exports.userSignUp = async (req, res) => {
-    const {username, email, password} = req.body
-    console.log({username, email, password})
-//    try {
-    
+    const userFound = await User.findOne({email: req.body.email})
 
-//     let user = await User.findOne({email})
- 
-//     if (user) {
-//         return res.redirect('signup')
-//         // return res.json('User already exist')
-//     }
- 
-//     user = new User({
-//         username,
-//         email,
-//         password
-//     })
- 
-//     await user.save()
-//     // res.redirect('login.ejs')
-//     return res.status(200).json('User Creation Success')
-//    } catch (error) {
-//        res.status(500).json({error})
-//    }
-//    res.redirect('login.ejs')
-}
-
-exports.userLogin = async (req, res) => {
-    const {email, password} = req.body
-    JSON.stringify([],null,2)
-    console.log(email, password)
-    // try {
-    //     const {email, password} = req.body
-
-    // let user = await User.findOne({email})
- 
-    // if (!user) {
-    //    return res.status(200).json('User doesn\'t exist')
-    // }
-
-    // const isMatch = await bcrypt.compareSync(password, user.password)
-
-    // if(!isMatch) {
-    //    return res.status(200).json('Go and login')   
-    // }
-    // req.session.isAuth = true
-    // return res.status(200).json('Login Success')
-    // } catch (error) {
-    //     res.status(500).json({error})
-    // }
-    // res.redirect('home.ejs')
-}
-
-exports.userLogout = async (req, res) => {
-    try {
-        await req.session.destroy()
-        res.status(200).json('Logout Success')
-    } catch (error) {
-        res.status(500).json(error)
+    if(userFound) {
+        req.flash("error", "User with this email already exists")
+        res.redirect("/signup")
     }
+    try {
+        const hashedPassword = await bcrypt.hash(req.body.password, 10)
+        const user = new User({
+            username: req.body.username,
+            email: req.body.email,
+            password: hashedPassword
+        })
+
+        await user.save()
+        res.redirect("/login")
+    } catch (err) {
+           console.log({err})
+           res.redirect("/signup")
+       }
+    
+}
+
+exports.userLogin = passport.authenticate("local", {
+    successRedirect: "/home",
+    failureRedirect: "/login",
+    failureFlash: true
+})
+
+exports.userLogout = (req,res) => {
+    req.logOut()
+    res.redirect("/")
 }
 
 exports.getSignUpPage =  (req, res) => {
@@ -76,7 +62,11 @@ exports.getLoginPage =  (req, res) => {
 }
 
 exports.getHomePage =  (req, res) => {
-    res.render('login.ejs')
+    res.render('home.ejs')
     // res.status(200).json('Home Page')
 }
 
+exports.getLandingPage =  (req, res) => {
+    res.render('landing.ejs')
+    // res.status(200).json('Home Page')
+}

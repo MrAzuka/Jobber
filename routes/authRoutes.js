@@ -1,6 +1,6 @@
 const {Router} = require('express')
 const router = Router()
-const {userSignUp, userLogin, getSignUpPage, getLoginPage, getHomePage, userLogout} = require('../controllers/authControllers')
+const {userSignUp, userLogin, getSignUpPage, getLoginPage, getHomePage, userLogout, getLandingPage} = require('../controllers/authControllers')
 const {isAuth} = require('../middleware/isAuth')
 
 
@@ -14,11 +14,12 @@ router.post('/signup', userSignUp)
 // @desc   Login
 router.post('/login', userLogin)
 
-// @routes /logout
-// @desc   Logout
-router.post('/logout', userLogout)
 
 // GET routes
+
+// @routes /
+// @desc   Get landing page
+router.get('/', getLandingPage)
 
 // @routes /signup
 // @desc   Get signup page
@@ -31,5 +32,11 @@ router.get('/login', getLoginPage)
 // @routes /home
 // @desc   Get home page
 router.get('/home', isAuth, getHomePage)
+
+
+//  DELETE ROUTE
+// @routes /logout
+// @desc   Logout
+router.delete('/logout', userLogout)
 
 module.exports = router
