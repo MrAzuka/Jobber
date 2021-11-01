@@ -16,29 +16,35 @@ initializePassport(
     }
 )
 
-exports.userSignUp = async (req, res) => {
-    const userFound = await User.findOne({email: req.body.email})
+exports.userSignUp = (req, res) => {
+    const userFound = User.findOne({email: req.body.email})
 
     if(userFound) {
         req.flash("error", "User with this email already exists")
         res.redirect("/signup")
     }
-    try {
-        const hashedPassword = await bcrypt.hash(req.body.password, 10)
-        const user = new User({
-            username: req.body.username,
-            email: req.body.email,
-            password: hashedPassword
-        })
-
-        await user.save()
-        res.redirect("/login")
-    } catch (err) {
-           console.log({err})
-           res.redirect("/signup")
-       }
     
-}
+    User.create({
+        email: req.body.email,
+        password: req.body.password
+    }).then((newUser) => {
+       
+        const salt = 12
+        const hashPassword = bcrypt.hash(req.body.password,salt)
+
+        newUser.password = hashPassword
+        newUser.save()
+    }).then(() => {
+        res.redirect("/login")
+        console.log("Finally login")
+    }).catch((err) => {
+        console.log(err)
+        req.flash("error", "User not created")
+
+    })
+    } 
+    
+
 
 exports.userLogin = passport.authenticate("local", {
     successRedirect: "/home",
