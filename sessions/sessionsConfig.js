@@ -6,5 +6,5 @@ const {MONGO_URI} = process.env
 
 exports.store = new MongoSession({
     uri: MONGO_URI,
-    collection: 'Sessions'
+    collection: 'sessions'
 })

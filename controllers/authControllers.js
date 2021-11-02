@@ -1,54 +1,41 @@
 const User = require('../models/authUser')
 const bcrypt = require('bcrypt')
 const passport = require('passport')
-const initializePassport = require('../passport-config/passport-config')
 
 
-initializePassport(
-    passport, 
-    async (email) => {
-        const userFound = await User.findOne({email})
-        return userFound
-    },
-    async (id) => {
-        const userFound = await User.findOne({_id: id})
-        return userFound
-    }
-)
+
 
 exports.userSignUp = (req, res) => {
-    const userFound = User.findOne({email: req.body.email})
-
+    const userFound = User.findOne({username: req.body.username})
+    
     if(userFound) {
-        req.flash("error", "User with this email already exists")
+        req.flash("error", "User with this username already exists")
         res.redirect("/signup")
+        return 
     }
     
-    User.create({
-        email: req.body.email,
-        password: req.body.password
-    }).then((newUser) => {
-       
-        const salt = 12
-        const hashPassword = bcrypt.hash(req.body.password,salt)
+    bcrypt.genSalt(12, function (err, salt) {
+        if (err) return next(err)
+        bcrypt.hash(req.body.password, salt, function (err, hash) {
+            if (err) return next(err)
+            const newUser = new User({
+                username: req.body.username,
+                password: hash
+            })
+            console.log(newUser)
+            newUser.save()
 
-        newUser.password = hashPassword
-        newUser.save()
-    }).then(() => {
-        res.redirect("/login")
-        console.log("Finally login")
-    }).catch((err) => {
-        console.log(err)
-        req.flash("error", "User not created")
-
+            res.redirect('/login')
+        })
     })
-    } 
+    
+} 
     
 
 
 exports.userLogin = passport.authenticate("local", {
     successRedirect: "/home",
-    failureRedirect: "/login",
+    failureRedirect: "/login?error=true",
     failureFlash: true
 })
 

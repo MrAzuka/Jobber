@@ -1,16 +1,16 @@
 const {Schema, model} = require('mongoose')
-const passportLocalMongoose = require('passport-local-mongoose');
+
 
 const userSchema = new Schema({
-    email: {
+    username: {
         type: String,
-        // required: true,
+        required: true,
         unique: true,
         lowercase: true
     },
     password: {
         type: String,
-        // required: true
+        required: true
     },
     role: {
         type: String,
