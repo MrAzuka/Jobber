@@ -5,30 +5,26 @@ const passport = require('passport')
 
 
 
-exports.userSignUp = (req, res) => {
-    const userFound = User.findOne({username: req.body.username})
+exports.userSignUp = async (req, res) => {
+    const userFound = await User.findOne({username: req.body.username})
     
     if(userFound) {
-        req.flash("error", "User with this username already exists")
+        console.log("error", "User with this username already exists")
         res.redirect("/signup")
         return 
     }
-    
-    bcrypt.genSalt(12, function (err, salt) {
-        if (err) return next(err)
-        bcrypt.hash(req.body.password, salt, function (err, hash) {
-            if (err) return next(err)
+       
+          try {
             const newUser = new User({
                 username: req.body.username,
-                password: hash
+                password: req.body.password
             })
             console.log(newUser)
-            newUser.save()
-
+            await newUser.save()
             res.redirect('/login')
-        })
-    })
-    
+          } catch (err) {
+              console.log(err)
+          }
 } 
     
 
@@ -45,21 +41,21 @@ exports.userLogout = (req,res) => {
 }
 
 exports.getSignUpPage =  (req, res) => {
-    res.render('signup')
+    res.render('signup', {layout: 'form.hbs'})
     // res.status(200).json('SignUp page')
 }
 
 exports.getLoginPage =  (req, res) => {
-    res.render('login.ejs')
+    res.render('login', {layout: 'form.hbs'})
     // res.status(200).json('Login Page')
 }
 
 exports.getHomePage =  (req, res) => {
-    res.render('home.ejs')
+    res.render('home')
     // res.status(200).json('Home Page')
 }
 
 exports.getLandingPage =  (req, res) => {
-    res.render('landing.ejs')
+    res.render('landing')
     // res.status(200).json('Home Page')
 }

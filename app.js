@@ -3,6 +3,7 @@ const express = require('express')
 const exphbs  = require('express-handlebars')
 const session = require('express-session')
 const passport = require('passport')
+const bodyParser = require('body-parser')
 const flash = require('express-flash')
 const methodOveride = require('method-override')
 const {PORT, SESSION_SECRET_KEY } = process.env
@@ -18,19 +19,25 @@ connectDB()
 
 
 // View Engine
-app.engine('handlebars', exphbs())
-app.set('view engine', 'handlebars')
+app.set('view engine', 'hbs')
+app.engine('hbs', exphbs({
+    extname: 'hbs',
+    defaultLayout: 'main.hbs'
+}))
+
 
 
 // Middleware
 app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
+// app.use(bodyParser.urlencoded({ extended: true }))
+// app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }))
 app.use(flash())
 // NOTE: Always put session before passport.session
 app.use(session({
     secret: SESSION_SECRET_KEY,
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     store: store
 }))
 app.use(methodOveride('_method'))
