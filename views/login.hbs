@@ -1,18 +1,19 @@
 
-   <div class="main">
-    <h1>LOGIN</h1>
     <form method="post" action="/login">
-      <div class="mb-3">
-        <label for="username" class="form-label">Username</label>
-        <input type="text" name="username" class="form-control" id="username">
+      <h1>LOGIN</h1>
+      <div class="icon">
+        <i class="fas fa-user-circle"></i>
       </div>
-      <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
-        <input type="password" name="password" class="form-control" id="password">
+      <div class="formcontainer">
+      <div class="container">
+        <label for="username"><strong>Username</strong></label>
+        <input type="text" placeholder="Enter Username" name="username" required>
+        <label for="password"><strong>Password</strong></label>
+        <input type="password" placeholder="Enter Password" name="password" required>
       </div>
-      <input type="submit" class="btn btn-primary" value="Save"></input>
-      Don't have an account. <a href='/signup'>Register</a>
+      <button type="submit"><strong>SUBMIT</strong></button>
+      <div class="container-bottom">
+         <span class="link"><a href="/signup">Register</a></span>
+        <span class="password"><a href="#">Forgot password?</a></span>
+      </div>
     </form>
-   </div>
-
-  

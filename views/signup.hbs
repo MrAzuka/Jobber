@@ -1,16 +1,17 @@
-
-  <div class="main">
+<form method="post" action="/signup">
       <h1>REGISTER</h1>
-        <form method="post" action="/signup">
-            <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" name="username" class="form-control" id="username">
-              </div>
-            <div class="mb-3">
-              <label for="password" class="form-label">Password</label>
-              <input type="password" name="password" class="form-control" id="password">
-            </div>
-            <input button type="submit" class="btn btn-primary" value="Save"></input>
-            Already have an account. <a href='/login'>Login</a>
-          </form>
-    </div>      
+      <div class="icon">
+        <i class="fas fa-user-circle"></i>
+      </div>
+      <div class="formcontainer">
+      <div class="container">
+        <label for="username"><strong>Username</strong></label>
+        <input type="text" placeholder="Enter Username" name="username" required>
+        <label for="password"><strong>Password</strong></label>
+        <input type="password" placeholder="Enter Password" name="password" required>
+      </div>
+      <button type="submit"><strong>SUBMIT</strong></button>
+      <div class="container-signup">
+         <span class="login-link"><a href="/login">Already have an account</a></span>
+      </div>
+    </form>  

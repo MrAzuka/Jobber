@@ -14,11 +14,10 @@ exports.userSignUp = async (req, res) => {
         })    
         
         const user = await newUser.save()
-
-        console.log(user)
-        res.redirect('/login')
+        res.redirect('/login', 201)
         } catch (err) {
             console.log(err)
+            res.redirect('/signup', 400)
         }
 } 
     
@@ -52,20 +51,16 @@ exports.userLogout = (req,res) => {
 
 exports.getSignUpPage =  (req, res) => {
     res.render('signup', {layout: 'form.hbs'})
-    // res.status(200).json('SignUp page')
 }
 
 exports.getLoginPage =  (req, res) => {
     res.render('login', {layout: 'form.hbs'})
-    // res.status(200).json('Login Page')
 }
 
 exports.getHomePage =  (req, res) => {
     res.render('home')
-    // res.status(200).json('Home Page')
 }
 
 exports.getLandingPage =  (req, res) => {
     res.render('landing')
-    // res.status(200).json('Home Page')
 }

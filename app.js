@@ -7,6 +7,7 @@ const methodOveride = require('method-override')
 const {PORT, SESSION_SECRET_KEY } = process.env
 const {connectDB} = require('./DB/connectDB')
 const authRoutes = require('./routes/authRoutes')
+const profileRoutes = require('./routes/profileRoutes')
 const {store} = require('./sessions/sessionsConfig')
 
 
@@ -20,7 +21,9 @@ connectDB()
 app.set('view engine', 'hbs')
 app.engine('hbs', exphbs({
     extname: 'hbs',
-    defaultLayout: 'main.hbs'
+    defaultLayout: 'main',
+    partialsDir: `${__dirname}/views/partials`,
+    layoutsDir: `${__dirname}/views/layouts`
 }))
 
 
@@ -42,6 +45,7 @@ app.use(express.static('public'))
 
 // Routes
 app.use(authRoutes)
+app.use('/auth', profileRoutes)
 
 app.listen(PORT, ()=>{
     console.log('Server running on PORT 8000')
