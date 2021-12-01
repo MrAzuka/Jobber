@@ -2,7 +2,8 @@ const request = require('request')
 const cheerio = require('cheerio')
 
 
-exports.jobScraper = (url) => {
+exports.jobScraper = (req, res, url) => {
+
     let title, company, link;
     const jobs = [];
 
@@ -32,7 +33,9 @@ exports.jobScraper = (url) => {
             jobs[l].link = link;
             l++;
         });
-
-        console.log(jobs);
+        // console.log(jobs)
+        res.render('home', {
+            jobs
+        })
     });
 }

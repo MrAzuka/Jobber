@@ -1,5 +1,7 @@
 const User = require('../models/authUser')
 const bcrypt = require('bcrypt')
+const request = require('request')
+const cheerio = require('cheerio')
 const { jobScraper } = require('../scraper/jobbermanScraper')
 
 exports.userSignUp = async (req, res) => {
@@ -14,10 +16,10 @@ exports.userSignUp = async (req, res) => {
         })
 
         const user = await newUser.save()
-        res.redirect('/login', 201)
+        res.redirect('/login')
     } catch (err) {
         console.log(err)
-        res.redirect('/signup', 400)
+        res.redirect('/signup')
     }
 }
 
@@ -59,8 +61,7 @@ exports.getLoginPage = (req, res) => {
 
 exports.getHomePage = (req, res) => {
     url = "https://www.jobberman.com/jobs"
-    jobScraper(url)
-    res.render('home')
+    jobScraper(req, res, url)
 }
 
 exports.getLandingPage = (req, res) => {

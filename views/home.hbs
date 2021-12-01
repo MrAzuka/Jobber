@@ -1,1 +1,12 @@
 <h1>HOME PAGE</h1>
+
+<ul class="list-group">
+    {{#each jobs}}
+    <li class="list-group-item">
+        <ul> {{this.title}} </ul>
+        <ul> {{this.company}} </ul>
+        <ul> {{this.link}} </ul>
+    </li>
+
+    {{/each}}
+</ul>
