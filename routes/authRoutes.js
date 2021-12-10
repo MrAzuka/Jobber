@@ -1,42 +1,32 @@
 const { Router } = require('express')
 const router = Router()
-const { userSignUp, userLogin, getSignUpPage, getLoginPage, getHomePage, userLogout, getLandingPage } = require('../controllers/authControllers')
-const { isAuth } = require('../middleware/isAuth')
-
-
+const { userSignUp, userLogin, getSignUpPage, getLoginPage, userLogout } = require('../controllers/authControllers')
 
 // POST routes
 
-// @routes /signup
+// @routes /auth/signup
 // @desc   Signup
 router.post('/signup', userSignUp)
 
-// @routes /login
+// @routes /auth/login
 // @desc   Login
 router.post('/login', userLogin)
 
 
 // GET routes
 
-// @routes /
-// @desc   Get landing page
-router.get('/', getLandingPage)
-
-// @routes /signup
+// @routes /auth/signup
 // @desc   Get signup page
 router.get('/signup', getSignUpPage)
 
-// @routes /login
+// @routes /auth/login
 // @desc   Get login page
 router.get('/login', getLoginPage)
 
-// @routes /home
-// @desc   Get home page
-router.get('/home', isAuth, getHomePage)
-
 
 //  DELETE ROUTE
-// @routes /logout
+
+// @routes /auth/logout
 // @desc   Logout
 router.delete('/logout', userLogout)
 

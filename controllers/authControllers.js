@@ -1,8 +1,6 @@
 const User = require('../models/authUser')
 const bcrypt = require('bcrypt')
-const request = require('request')
-const cheerio = require('cheerio')
-const { jobScraper } = require('../scraper/jobbermanScraper')
+
 
 exports.userSignUp = async (req, res) => {
 
@@ -61,13 +59,4 @@ exports.getSignUpPage = (req, res) => {
 
 exports.getLoginPage = (req, res) => {
     res.status(200).json({ message: "Welcome to the Login Page" })
-}
-
-exports.getHomePage = (req, res) => {
-    url = "https://www.jobberman.com/jobs"
-    jobScraper(req, res, url)
-}
-
-exports.getLandingPage = (req, res) => {
-    res.status(200).json({ message: "Welcome to the Landing Page" })
 }

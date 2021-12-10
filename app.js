@@ -7,6 +7,7 @@ const { PORT, SESSION_SECRET_KEY } = process.env
 const { connectDB } = require('./DB/connectDB')
 const authRoutes = require('./routes/authRoutes')
 const profileRoutes = require('./routes/profileRoutes')
+const homeRoutes = require('./routes/homeRoutes')
 const { store } = require('./sessions/sessionsConfig')
 
 
@@ -32,6 +33,7 @@ app.use(methodOveride('_method'))
 
 // Routes
 app.use('/auth', authRoutes)
+app.use(homeRoutes)
 app.use(profileRoutes)
 
 
