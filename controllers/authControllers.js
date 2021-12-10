@@ -2,8 +2,8 @@ const User = require('../models/authUser')
 const bcrypt = require('bcrypt')
 
 
-exports.userSignUp = async (req, res) => {    
-     
+exports.userSignUp = async (req, res) => {
+
     try {
         const salt = await bcrypt.genSalt(10)
         const hashPassword = await bcrypt.hash(req.body.password, salt)
@@ -11,61 +11,52 @@ exports.userSignUp = async (req, res) => {
         const newUser = new User({
             username: req.body.username,
             password: hashPassword,
-        })    
-        
-        const user = await newUser.save()
+        })
 
-        console.log(user)
+        const user = await newUser.save()
+        res.status(200).json({ message: "Signup Successful" })
         res.redirect('/login')
-        } catch (err) {
-            console.log(err)
-        }
-} 
-    
+    } catch (err) {
+        console.log(err)
+        res.status(400).json({ message: err })
+        res.redirect('/signup')
+    }
+}
+
 
 
 exports.userLogin = async (req, res) => {
-   try {
-    const user = await User.findOne({username: req.body.username})
-    if (!user) {
-        req.flash('error', "User doesn't exist")
-        res.redirect('/login')
-    }
-   
-    const isMatch = await bcrypt.compare(req.body.password, user.password)
+    try {
+        const user = await User.findOne({ username: req.body.username })
+        if (!user) {
+            res.status(400).json({ message: "User doesn't exist" })
+            res.redirect('/login')
+        }
 
-    if(!isMatch) {
-        req.flash("error", "Wrong password")
-        res.redirect('/login')  
+        const isMatch = await bcrypt.compare(req.body.password, user.password)
+
+        if (!isMatch) {
+            res.status(400).json({ message: "Incorrect Password" })
+            res.redirect('/login')
+        }
+        req.session.isAuth = true
+        res.status(200).json({ message: `Login Successful. Welcome ${user.username}` })
+        res.redirect('/home')
+    } catch (err) {
+        console.log(err)
+        res.status(400).json({ message: err })
     }
-    req.session.isAuth = true
-    res.redirect('/home')
-   } catch (err) {
-       console.log(err)
-   }
 }
 
-exports.userLogout = (req,res) => {
+exports.userLogout = (req, res) => {
     req.logOut()
-    res.redirect("/")
+    res.status(200).json({ message: "Logout Successful" })
 }
 
-exports.getSignUpPage =  (req, res) => {
-    res.render('signup', {layout: 'form.hbs'})
-    // res.status(200).json('SignUp page')
+exports.getSignUpPage = (req, res) => {
+    res.status(200).json({ message: "Welcome to the Registeration Page" })
 }
 
-exports.getLoginPage =  (req, res) => {
-    res.render('login', {layout: 'form.hbs'})
-    // res.status(200).json('Login Page')
-}
-
-exports.getHomePage =  (req, res) => {
-    res.render('home')
-    // res.status(200).json('Home Page')
-}
-
-exports.getLandingPage =  (req, res) => {
-    res.render('landing')
-    // res.status(200).json('Home Page')
+exports.getLoginPage = (req, res) => {
+    res.status(200).json({ message: "Welcome to the Login Page" })
 }
