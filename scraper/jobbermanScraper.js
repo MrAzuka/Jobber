@@ -34,8 +34,6 @@ exports.jobScraper = (req, res, url) => {
             l++;
         });
         // console.log(jobs)
-        res.render('home', {
-            jobs
-        })
+        res.status(200).json({ job: jobs })
     });
 }

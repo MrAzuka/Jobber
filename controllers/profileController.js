@@ -11,14 +11,15 @@ exports.createProfile = async (req, res) => {
         })
 
         const User = await newProfile.save()
-        res.redirect('/home', 201)
+        res.status(201).json({ message: "Profile created" })
+        res.redirect('/home')
     } catch (err) {
         console.log(err)
-        // TODO: Send a flash error message and redirect to error page
+        res.status(400).json({ message: err })
     }
 }
 
-exports.updateProfile = async (req,res) => {
+exports.updateProfile = async (req, res) => {
     try {
         const updateProfile = await Profile.findByIdAndUpdate(req.params.id, {
             fname: req.body.fname,
@@ -27,20 +28,29 @@ exports.updateProfile = async (req,res) => {
             address: req.body.address,
             occup: req.body.occup
         })
-        
+
         if (req.params.id != updateProfile) {
-            // TODO: Redirect to update page and send a flash error message
-            res.send('404error')
-        }else{
-            res.send(`profile: ${updateProfile}`)
+            res.status(404).json({ message: "Profile not Found" })
+        } else {
+            res.status(200).json({ "profile": updateProfile })
         }
     } catch (err) {
         console.log(err)
-        res.send('404error')
+        res.status(400).json({ message: err })
     }
 }
 
 
-exports.getProfilePage = (req,res) => {
-    res.render('profile', {layout: 'form.hbs'})
+exports.getProfilePage = async (req, res) => {
+    try {
+        const profile = await Profile.findById(req.params.id)
+        if (req.params.id != profile) {
+            res.status(404).json({ message: "Profile not Found" })
+        } else {
+            res.status(200).json({ "User profile": profile })
+        }
+    } catch (err) {
+        console.log(err)
+        res.status(400).json({ message: err })
+    }
 }

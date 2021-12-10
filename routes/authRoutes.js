@@ -1,7 +1,6 @@
 const { Router } = require('express')
 const router = Router()
 const { userSignUp, userLogin, getSignUpPage, getLoginPage, getHomePage, userLogout, getLandingPage } = require('../controllers/authControllers')
-const { jobScraper } = require('../scraper/jobbermanScraper')
 const { isAuth } = require('../middleware/isAuth')
 
 
