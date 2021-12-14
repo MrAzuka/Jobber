@@ -1,6 +1,5 @@
 require('dotenv').config()
 const express = require('express')
-const exphbs = require('express-handlebars')
 const session = require('express-session')
 const flash = require('express-flash')
 const { PORT, SESSION_SECRET_KEY } = process.env
@@ -9,6 +8,7 @@ const authRoutes = require('./routes/authRoutes')
 const profileRoutes = require('./routes/profileRoutes')
 const homeRoutes = require('./routes/homeRoutes')
 const { store } = require('./sessions/sessionsConfig')
+const cors = require('cors')
 
 
 const app = express()
@@ -21,6 +21,7 @@ connectDB()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(flash())
+app.use(cors)
 // NOTE: Always put session before passport.session
 app.use(session({
     secret: SESSION_SECRET_KEY,
@@ -28,7 +29,7 @@ app.use(session({
     saveUninitialized: true,
     store: store
 }))
-app.use(methodOveride('_method'))
+
 
 
 // Routes

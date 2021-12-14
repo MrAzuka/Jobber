@@ -12,7 +12,6 @@ exports.createProfile = async (req, res) => {
 
         const User = await newProfile.save()
         res.status(201).json({ message: "Profile created" })
-        res.redirect('/home')
     } catch (err) {
         console.log(err)
         res.status(400).json({ message: err })
