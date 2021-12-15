@@ -6,5 +6,6 @@ exports.getHomePage = (req, res) => {
 }
 
 exports.getLandingPage = (req, res) => {
+    console.log('sss')
     res.status(200).json({ message: "Welcome to the Landing Page" })
 }

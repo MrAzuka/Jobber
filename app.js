@@ -1,7 +1,6 @@
 require('dotenv').config()
 const express = require('express')
 const session = require('express-session')
-const flash = require('express-flash')
 const { PORT, SESSION_SECRET_KEY } = process.env
 const { connectDB } = require('./DB/connectDB')
 const authRoutes = require('./routes/authRoutes')
@@ -20,8 +19,7 @@ connectDB()
 // Middleware
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use(flash())
-app.use(cors)
+app.use(cors())
 // NOTE: Always put session before passport.session
 app.use(session({
     secret: SESSION_SECRET_KEY,
@@ -39,5 +37,5 @@ app.use(profileRoutes)
 
 
 app.listen(PORT, () => {
-    console.log('Server running on PORT 8000')
+    console.log(`Server running on PORT ${PORT}`)
 })
