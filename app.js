@@ -4,7 +4,6 @@ const session = require('express-session')
 const { PORT, SESSION_SECRET_KEY } = process.env
 const { connectDB } = require('./DB/connectDB')
 const authRoutes = require('./routes/authRoutes')
-const profileRoutes = require('./routes/profileRoutes')
 const homeRoutes = require('./routes/homeRoutes')
 const { store } = require('./sessions/sessionsConfig')
 const cors = require('cors')
@@ -33,7 +32,7 @@ app.use(session({
 // Routes
 app.use('/auth', authRoutes)
 app.use(homeRoutes)
-app.use(profileRoutes)
+
 
 
 app.listen(PORT, () => {
