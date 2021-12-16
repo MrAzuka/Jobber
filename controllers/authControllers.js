@@ -41,7 +41,7 @@ exports.userLogin = async (req, res) => {
             res.status(400).json({ message: "Incorrect Password" })
         }
         req.session.isAuth = true
-        res.status(200).json({ message: `Login Successful. Welcome ${user.username}` })
+        res.status(200).json({ message: `Login Successful. Welcome ${user.fname} ${user.lname}` })
     } catch (err) {
         console.log(err)
         res.status(400).json({ message: err })
