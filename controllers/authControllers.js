@@ -44,7 +44,7 @@ exports.userLogin = async (req, res) => {
 }
 
 exports.userLogout = (req, res) => {
-    req.logOut()
+    req.session.destroy()
     res.status(200).json({ message: "Logout Successful" })
 }
 
