@@ -19,6 +19,7 @@ exports.userSignUp = async (req, res) => {
         })
 
         const user = await newUser.save()
+        req.session.user = newUser
         res.status(200).json({ message: "Signup Successful" })
     } catch (err) {
         console.log(err)
@@ -41,6 +42,7 @@ exports.userLogin = async (req, res) => {
             res.status(400).json({ message: "Incorrect Password" })
         }
         req.session.isAuth = true
+        req.session.user = user
         res.status(200).json({ message: `Login Successful. Welcome ${user.fname} ${user.lname}` })
     } catch (err) {
         console.log(err)

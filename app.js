@@ -25,8 +25,12 @@ app.use(cors())
 app.use(session({
     secret: SESSION_SECRET_KEY,
     resave: false,
-    saveUninitialized: true,
-    store: store
+    saveUninitialized: false,
+    store: store,
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+        sameSite: true
+    }
 }))
 
 // Seed The Admin

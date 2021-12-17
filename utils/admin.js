@@ -1,7 +1,7 @@
 const User = require('../models/authUser')
 const bcrypt = require('bcrypt')
 require('dotenv').config()
-const { ADMIN_PASSWORD } = process.env
+const { ADMIN_PASSWORD, ADMIN_EMAIL } = process.env
 
 exports.seedAdmin = async () => {
     try {
@@ -16,7 +16,7 @@ exports.seedAdmin = async () => {
 
             fname: "Admin",
             lname: "Admin",
-            email: "admin@admin.com",
+            email: ADMIN_EMAIL,
             password: hashPassword,
             country: "Nil",
             occup: "admin",

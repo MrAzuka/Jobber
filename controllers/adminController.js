@@ -7,7 +7,6 @@ exports.getAllUsers = async (req, res) => {
         const allUsers = await Users.find({})
         res.status(200).json({ "Users": allUsers })
     } catch (err) {
-        console.log("I'm the error")
         res.status(500).json({ "Error": err })
     }
 }
@@ -32,13 +31,10 @@ exports.updateUser = async (req, res) => {
             country: req.body.country,
             occup: req.body.occup
         })
-        if (email != updateUser) {
-            res.status(404).json("User not found")
-        }
-        res.status(200)
-            .json({ message: "Succesfully Updated" }, { "User": updateUser })
+
+        res.status(200).json({ message: "Succesfully Updated", "User": updateUser })
     } catch (err) {
-        res.status(500).json({ "Error": err })
+        res.status(500).json(err)
     }
 }
 
@@ -46,9 +42,6 @@ exports.updateUser = async (req, res) => {
 exports.deleteUser = async (req, res) => {
     try {
         const deleteUser = await Users.findOneAndDelete({ email: req.params.email })
-        if (email != deleteUser) {
-            res.status(404).json("User doesn't exist")
-        }
         res.status(200).json("User Deleted Succsessfully")
     } catch (err) {
         res.status(500).json({ "Error": err })
