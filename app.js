@@ -1,14 +1,14 @@
 require('dotenv').config()
 const express = require('express')
-const exphbs = require('express-handlebars')
 const session = require('express-session')
-const flash = require('express-flash')
 const { PORT, SESSION_SECRET_KEY } = process.env
 const { connectDB } = require('./DB/connectDB')
 const authRoutes = require('./routes/authRoutes')
-const profileRoutes = require('./routes/profileRoutes')
 const homeRoutes = require('./routes/homeRoutes')
+const adminRoutes = require('./routes/adminRoutes')
 const { store } = require('./sessions/sessionsConfig')
+const { seedAdmin } = require('./utils/admin')
+const cors = require('cors')
 
 
 const app = express()
@@ -20,23 +20,29 @@ connectDB()
 // Middleware
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use(flash())
+app.use(cors())
 // NOTE: Always put session before passport.session
 app.use(session({
     secret: SESSION_SECRET_KEY,
     resave: false,
-    saveUninitialized: true,
-    store: store
+    saveUninitialized: false,
+    store: store,
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+        sameSite: true
+    }
 }))
-app.use(methodOveride('_method'))
 
+// Seed The Admin
+seedAdmin()
 
 // Routes
 app.use('/auth', authRoutes)
 app.use(homeRoutes)
-app.use(profileRoutes)
+app.use('/admin', adminRoutes)
+
 
 
 app.listen(PORT, () => {
-    console.log('Server running on PORT 8000')
+    console.log(`Server running on PORT ${PORT}`)
 })

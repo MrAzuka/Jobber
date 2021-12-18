@@ -9,17 +9,21 @@ exports.userSignUp = async (req, res) => {
         const hashPassword = await bcrypt.hash(req.body.password, salt)
 
         const newUser = new User({
-            username: req.body.username,
+
+            fname: req.body.fname,
+            lname: req.body.lname,
+            email: req.body.email,
             password: hashPassword,
+            country: req.body.country,
+            occup: req.body.occup
         })
 
         const user = await newUser.save()
+        req.session.user = newUser
         res.status(200).json({ message: "Signup Successful" })
-        res.redirect('/login')
     } catch (err) {
         console.log(err)
         res.status(400).json({ message: err })
-        res.redirect('/signup')
     }
 }
 
@@ -27,21 +31,19 @@ exports.userSignUp = async (req, res) => {
 
 exports.userLogin = async (req, res) => {
     try {
-        const user = await User.findOne({ username: req.body.username })
+        const user = await User.findOne({ email: req.body.email })
         if (!user) {
             res.status(400).json({ message: "User doesn't exist" })
-            res.redirect('/login')
         }
 
         const isMatch = await bcrypt.compare(req.body.password, user.password)
 
         if (!isMatch) {
             res.status(400).json({ message: "Incorrect Password" })
-            res.redirect('/login')
         }
         req.session.isAuth = true
-        res.status(200).json({ message: `Login Successful. Welcome ${user.username}` })
-        res.redirect('/home')
+        req.session.user = user
+        res.status(200).json({ message: `Login Successful. Welcome ${user.fname} ${user.lname}` })
     } catch (err) {
         console.log(err)
         res.status(400).json({ message: err })
@@ -49,7 +51,7 @@ exports.userLogin = async (req, res) => {
 }
 
 exports.userLogout = (req, res) => {
-    req.logOut()
+    req.session.destroy()
     res.status(200).json({ message: "Logout Successful" })
 }
 
